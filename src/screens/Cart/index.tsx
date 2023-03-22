@@ -1,15 +1,21 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Button} from 'react-native';
+import React, {useContext} from 'react';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+
+import {useContextSelector} from 'use-context-selector';
+
+import {CartContext} from '../../contexts/Cart';
 
 const Cart = () => {
-  // const {title, price} = route.params;
+  const cart = useContextSelector(CartContext, state => state.cart);
+  const total = useContextSelector(CartContext, state => state.total);
+  console.log(total);
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
         <Text>Carrinho</Text>
-        {/* <Text>{price}</Text> */}
+        <Text>total: {total}</Text>
+        <Text>{JSON.stringify(cart)}</Text>
       </View>
     </SafeAreaView>
   );
