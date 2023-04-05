@@ -7,10 +7,21 @@ import {
   Button,
   FlatList,
 } from 'react-native';
+import {useContextSelector} from 'use-context-selector';
 
+import {CartContext} from '../../contexts/Cart';
 import {getProducts} from '../../services/api';
 
 const Products = ({navigation}) => {
+  const cart = useContextSelector(CartContext, state => state.cart);
+  const handleAddItemToCart = useContextSelector(
+    CartContext,
+    state => state.handleAddItemToCart,
+  );
+  const handleRemoveItemToCart = useContextSelector(
+    CartContext,
+    state => state.handleRemoveItemToCart,
+  );
   const [products, setProducts] = useState();
 
   const handleGetData = async () => {
@@ -21,6 +32,8 @@ const Products = ({navigation}) => {
     handleGetData();
   }, []);
 
+  console.log(cart);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentWrapper}>
@@ -29,9 +42,14 @@ const Products = ({navigation}) => {
           data={products}
           keyExtractor={({id}) => `${id}`}
           renderItem={({item}) => (
-            <View>
+            <View style={{borderColor: 'red', borderWidth: 2, margin: 5}}>
               <Text>{item.title}</Text>
               <Text>{item.price}</Text>
+              <Button title="Add" onPress={() => handleAddItemToCart(item)} />
+              <Button
+                title="Remove"
+                onPress={() => handleRemoveItemToCart(item)}
+              />
               <Button
                 title="Go to Details"
                 onPress={() =>

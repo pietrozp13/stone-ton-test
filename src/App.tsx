@@ -1,9 +1,10 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import {SafeAreaView, StatusBar, useColorScheme, Text} from 'react-native';
+import {StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
+import {CartProvider} from './contexts/Cart';
 import Routes from './screens/routes';
 
 function App(): JSX.Element {
@@ -14,13 +15,13 @@ function App(): JSX.Element {
   };
 
   return (
-    <>
+    <CartProvider>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <Routes />
-    </>
+    </CartProvider>
   );
 }
 
