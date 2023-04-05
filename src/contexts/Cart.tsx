@@ -1,17 +1,26 @@
 import React, {useCallback, useState} from 'react';
 import {createContext} from 'use-context-selector';
 
-export const CartContext = createContext();
+import {CartContextType, IProduct} from '../types';
 
-export const CartProvider = ({children}) => {
-  const [cart, setCart] = useState([]);
+const inicialValue = {
+  cart: [],
+  handleAddItemToCart: () => {},
+  handleRemoveItemToCart: () => {},
+  total: 0,
+};
+
+export const CartContext = createContext<CartContextType>(inicialValue);
+
+export const CartProvider: React.FC<React.ReactNode> = ({children}) => {
+  const [cart, setCart] = useState<IProduct[]>([]);
 
   const total = useCallback(() => {
     // Total price X quant in the cart, for all products
     return cart.reduce((ack: number, {price, quant}) => ack + price * quant, 0);
   }, [cart])();
 
-  const handleAddItemToCart = product => {
+  const handleAddItemToCart = (product: IProduct) => {
     setCart(prevState => {
       const isProductInCart = prevState.find(
         currentProduct => currentProduct.id === product.id,
@@ -25,8 +34,8 @@ export const CartProvider = ({children}) => {
     });
   };
 
-  const handleRemoveItemToCart = product => {
-    setCart(prevState =>
+  const handleRemoveItemToCart = (product: IProduct) => {
+    setCart((prevState: IProduct[]) =>
       prevState.reduce((accumulator, currentProduct) => {
         const {id, quant} = currentProduct;
         if (product.id === id) {
@@ -39,24 +48,12 @@ export const CartProvider = ({children}) => {
         }
       }, []),
     );
-
-    // setCartItems(prev =>
-    //     prev.reduce((ack, item) => {
-    //       if (item.id === id) {
-    //         if (item.amount === 1) return ack;
-    //         return [...ack, { ...item, amount: item.amount - 1 }];
-    //       } else {
-    //         return [...ack, item];
-    //       }
-    //     }, [] as CartItemType[])
-    //   );
   };
 
   return (
     <CartContext.Provider
       value={{
         cart,
-        setCart,
         handleAddItemToCart,
         handleRemoveItemToCart,
         total,
