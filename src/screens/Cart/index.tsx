@@ -6,7 +6,7 @@ import {IProduct} from '../../types';
 
 import {CartContext} from '../../contexts/Cart';
 
-import ProductCardList from '../../components/ProductCard/ProductCardList';
+import ProductCard from '../../components/ProductCard';
 
 const Cart = () => {
   const cart = useContextSelector(
@@ -37,7 +37,7 @@ const Cart = () => {
           renderItem={({item}) => {
             const isOnCart = cart.find(cartItem => cartItem.id === item.id);
             return (
-              <ProductCardList
+              <ProductCard
                 item={item}
                 isSelectedCounter={isOnCart?.quant || false}
                 onAdd={() => handleAddItemToCart(item)}

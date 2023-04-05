@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Text} from 'react-native';
+import {Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -16,8 +16,8 @@ function Routes() {
         <Stack.Screen
           name="Produtos"
           component={Products}
-          options={({navigation, route}) => ({
-            headerRight: props => (
+          options={({navigation}) => ({
+            headerRight: () => (
               <Button
                 onPress={() => navigation.navigate('Carrinho')}
                 style={{backgroundColor: '#fff', fontSize: 20}}

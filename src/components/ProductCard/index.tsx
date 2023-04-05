@@ -1,9 +1,17 @@
 import React from 'react';
 import {StyleSheet, View, Text, Button, Image} from 'react-native';
 
-interface IProductCard {}
+import {IProduct} from '../../types';
 
-const ProductCardList = ({
+interface IProductCard {
+  item: IProduct;
+  onAdd?: () => void;
+  onRemove?: () => void;
+  onDetailes?: () => void;
+  isSelectedCounter?: boolean | number;
+}
+
+const ProductCard: React.FC<IProductCard> = ({
   item,
   onAdd,
   onRemove,
@@ -14,7 +22,7 @@ const ProductCardList = ({
     <View testID={`product-${item.id}`} style={styles.itemStyle}>
       <View style={styles.imageTextContainer}>
         <Image
-          style={{height: 120, width: 120}}
+          style={styles.image}
           source={{uri: item.images[0] || item.thumbnail}}
         />
         {/* <Text>{item.id}</Text> */}
@@ -79,5 +87,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '300',
   },
+  image: {height: 120, width: 120},
 });
-export default ProductCardList;
+export default ProductCard;
