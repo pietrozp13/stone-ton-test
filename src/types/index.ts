@@ -5,6 +5,8 @@ export interface IProduct {
   title: string;
   price: number;
   quant: number;
+  images: [string];
+  thumbnail: string;
 }
 export type CartContextType = {
   cart: IProduct[];

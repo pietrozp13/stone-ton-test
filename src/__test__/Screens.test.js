@@ -6,7 +6,8 @@ import {
   fireEvent,
 } from '@testing-library/react-native';
 
-import Routes from '../screens/routes';
+import Products from '../screens/Products';
+import Cart from '../screens/Cart';
 
 // Silence the warning https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
 // Use with React Native <= 0.63
@@ -24,6 +25,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () =>
       Promise.resolve({
+        status: 200,
         products: [
           {
             id: 1,
@@ -43,30 +45,23 @@ global.fetch = jest.fn(() =>
   }),
 );
 
-describe('Testing react navigation', () => {
+describe('Testing Products screen', () => {
   test('page contains the header and 10 items', async () => {
-    const component = <Routes />;
-    const navigation = {navigate: jest.fn()};
+    const component = <Products />;
 
     renderTest(component);
-    // const title = await screen.findByTestId('product-1');
-    // const id = await screen.findByText('1');
-    // const price = await screen.findByText(549);
     const items = await screen.findAllByText(/Add/);
 
-    // expect(title).toBe('iPhone 9');
     expect(items.length).toBe(1);
   });
 
-  test('clicking on one item takes you to the details screen', async () => {
-    renderTest(<Routes />);
+  test('Testing Cart screen', async () => {
+    renderTest(<Cart />);
     const toClick = await screen.findAllByText(/Carrinho/);
 
     await fireEvent(toClick[0], 'press');
     const newHeader = await screen.findAllByText(/Carrinho/);
-    // const newBody = await screen.findByText('the number you have chosen is 5');
 
     expect(newHeader).toBe('Carrinho');
-    // expect(newBody).toBeOnTheScreen();
   });
 });
