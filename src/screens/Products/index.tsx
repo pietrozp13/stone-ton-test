@@ -1,18 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  FlatList,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, FlatList} from 'react-native';
 import {useContextSelector} from 'use-context-selector';
+
+import {NaveProps} from '../../types';
 
 import {CartContext} from '../../contexts/Cart';
 import {getProducts} from '../../services/api';
 
-const Products = ({navigation}) => {
+import ProductCardList from '../../components/ProductCard/ProductCardList';
+
+const Products = ({navigation}: NaveProps) => {
   const cart = useContextSelector(CartContext, state => state.cart);
   const handleAddItemToCart = useContextSelector(
     CartContext,
@@ -22,45 +19,39 @@ const Products = ({navigation}) => {
     CartContext,
     state => state.handleRemoveItemToCart,
   );
-  const [products, setProducts] = useState();
+  const [allProducts, setAllProducts] = useState();
 
   const handleGetData = async () => {
-    const {products} = await getProducts();
-    setProducts(products);
+    const {products} = (await getProducts()) as any;
+    setAllProducts(products);
   };
   useEffect(() => {
     handleGetData();
   }, []);
 
-  console.log(cart);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentWrapper}>
-        <Button title="Carrinho" onPress={() => navigation.navigate('Cart')} />
         <FlatList
-          data={products}
+          data={allProducts}
           keyExtractor={({id}) => `${id}`}
-          renderItem={({item}) => (
-            <View style={{borderColor: 'red', borderWidth: 2, margin: 5}}>
-              <Text>{item.title}</Text>
-              <Text>{item.price}</Text>
-              <Button title="Add" onPress={() => handleAddItemToCart(item)} />
-              <Button
-                title="Remove"
-                onPress={() => handleRemoveItemToCart(item)}
-              />
-              <Button
-                title="Go to Details"
-                onPress={() =>
-                  navigation.navigate('ProductDetails', {
+          renderItem={({item}) => {
+            const isOnCart = cart.find(cartItem => cartItem.id === item.id);
+            return (
+              <ProductCardList
+                item={item}
+                isSelectedCounter={isOnCart?.quant || false}
+                onAdd={() => handleAddItemToCart(item)}
+                onRemove={() => handleRemoveItemToCart(item)}
+                onDetailes={() =>
+                  navigation.navigate('Detalhes', {
                     title: item.title,
                     price: item.price,
                   })
                 }
               />
-            </View>
-          )}
+            );
+          }}
         />
       </View>
     </SafeAreaView>
@@ -72,7 +63,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8e7e3',
   },
   contentWrapper: {
-    padding: 20,
+    marginHorizontal: 10,
+    padding: 10,
   },
 });
 export default Products;

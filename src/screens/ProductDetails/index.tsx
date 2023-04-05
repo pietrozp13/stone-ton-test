@@ -1,7 +1,9 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, Button} from 'react-native';
 
-const ProductDetails = ({navigation, route}) => {
+import {NaveProps} from '../../types';
+
+const ProductDetails = ({navigation, route}: NaveProps) => {
   const {title, price} = route.params;
 
   return (
